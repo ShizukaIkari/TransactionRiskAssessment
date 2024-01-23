@@ -7,18 +7,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// type Transaction struct {
-// 	Transaction_id      uint `json:"id"`
-// 	User_id             uint `json:"user_id"`
-// 	Dollar_cents_amount int  `json:"amount_us_cents"`
-// 	Id_card_used        uint `json:"card_id"`
-// 	Risk_rate           int  `json:"transaction_risk"`
-// }
-
-// type TransactionsInput struct {
-// 	InputTransactions []Transaction `json:"transactions"`
-// }
-
 func assessTransactions(context *gin.Context) {
 	var newTransactionsList TransactionsInput
 
