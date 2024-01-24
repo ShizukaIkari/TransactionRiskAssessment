@@ -1,22 +1,32 @@
 package main
 
 import (
-	// "github.com/stretchr/testify/assert"
+	"fmt"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 
 	mapset "github.com/deckarep/golang-set/v2"
 )
 
+/** Mocks for test cases*/
 var transactionsListMock = []Transaction{
-	{Transaction_id: 1, User_id: 1, Dollar_cents_amount: 200000, Id_card_used: 1},
-	{Transaction_id: 2, User_id: 1, Dollar_cents_amount: 600000, Id_card_used: 1},
-	{Transaction_id: 3, User_id: 3, Dollar_cents_amount: 1100000, Id_card_used: 1},
-	{Transaction_id: 4, User_id: 2, Dollar_cents_amount: 100000, Id_card_used: 2},
-	{Transaction_id: 5, User_id: 2, Dollar_cents_amount: 100000, Id_card_used: 3},
-	{Transaction_id: 6, User_id: 2, Dollar_cents_amount: 100000, Id_card_used: 4},
+	{TransactionId: 1, UserId: 1, DollarCentsAmount: 200000, IdCardUsed: 1},
+	{TransactionId: 2, UserId: 1, DollarCentsAmount: 600000, IdCardUsed: 1},
+	{TransactionId: 3, UserId: 3, DollarCentsAmount: 1100000, IdCardUsed: 1},
+	{TransactionId: 4, UserId: 2, DollarCentsAmount: 100000, IdCardUsed: 2},
+	{TransactionId: 5, UserId: 2, DollarCentsAmount: 100000, IdCardUsed: 3},
+	{TransactionId: 6, UserId: 2, DollarCentsAmount: 100000, IdCardUsed: 4},
 }
+var expectedSetsUser1 = mapset.NewSet(transactionsListMock[:2]...)
+var expectedSetsUser2 = mapset.NewSet(transactionsListMock[3:]...)
+var expectedSetsUser3 = mapset.NewSet(transactionsListMock[2])
 
-var expectedMap = map[uint]mapset.Set[Transaction]{}
+var expectedMap = map[uint]mapset.Set[Transaction]{
+	1: expectedSetsUser1,
+	2: expectedSetsUser2,
+	3: expectedSetsUser3,
+}
 
 func TestRelateUserToTransactions(t *testing.T) {
 	type args struct {
@@ -29,9 +39,18 @@ func TestRelateUserToTransactions(t *testing.T) {
 	}{
 		{
 			name: "should return a map with three keys for each user and transactions' set for each key",
-			args: transactionsMock,
+			args: args{transactionsListMock},
 			want: expectedMap,
 		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := RelateUserToTransactions(tt.args.transacts)
+			fmt.Println("got", got)
+			fmt.Println("expectedMap", expectedMap)
+			assert.Equal(t, tt.want, got)
+		})
 	}
 }
 
