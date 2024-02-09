@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"transactionriskassessment/domain"
 
 	"github.com/gin-gonic/gin"
 )
@@ -10,10 +11,9 @@ import (
 * assessTransactions receives a JSON from request body, calls RelateUserToTransactions to map
 * user ids to its respective transactions and finally calls CheckTransactions to assess the risk
 * for each transaction according to requirement's rules, returning the JSON with their risks
-* PS.: Result is ordered by Transaction ID
  */
-func assessTransactions(context *gin.Context) {
-	var newTransactionsList TransactionsInput
+func AssessTransactions(context *gin.Context) {
+	var newTransactionsList domain.TransactionsInput
 
 	// if API input is not what's expected, end the function
 	if err := context.BindJSON(&newTransactionsList); err != nil {
@@ -32,6 +32,6 @@ func assessTransactions(context *gin.Context) {
 func main() {
 	// server to run the API
 	router := gin.Default()
-	router.POST("/check_transactions", assessTransactions)
+	router.POST("/check_transactions", AssessTransactions)
 	router.Run("localhost:9090")
 }
